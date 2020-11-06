@@ -1,0 +1,17 @@
+.button {
+    margin: 30px;
+    height: 40px;
+    border: 2px solid grey;
+    border-radius: 10px;
+    width: auto;
+    min-width: 65px;
+    font-family: cursive;
+    font-size: 16px;
+	cursor: pointer;
+	outline: none;
+}
+
+.button:hover {
+    background-color: grey;
+    color: white;
+}
