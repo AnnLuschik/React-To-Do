@@ -9,6 +9,7 @@
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-scripts": "4.0.0",
+    "styled-components": "^5.2.1",
     "web-vitals": "^0.2.4"
   },
   "scripts": {
@@ -21,12 +22,12 @@
     "extends": [
       "react-app",
       "airbnb"
-	],
-	"rules": {
-		"react/prop-types": 0,
-    "react/button-has-type": 0,
-    "import/prefer-default-export": 0
-	}
+    ],
+    "rules": {
+      "react/prop-types": 0,
+      "react/button-has-type": 0,
+      "import/prefer-default-export": 0
+    }
   },
   "browserslist": {
     "production": [
