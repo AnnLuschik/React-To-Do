@@ -1,50 +1,97 @@
 import React, { useState, useCallback } from 'react';
-import {
-  Button, Form, Input, Table, TableRow,
-} from './components';
+import styled from 'styled-components';
+import { Header, Form, Task } from './components';
 
-function App() {
-  const [value, setValue] = useState('');
-  const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
+export function App() {
+  const [todoList, setTodoList] = useState([]);
+  const [doneList, setDoneList] = useState([]);
+  const [activePage, setActivePage] = useState('Active');
 
-  const onSubmit = useCallback(async () => {
-    setErrorMessage('');
-    setValue('');
-    try {
-      setLoading(true);
-      const res = await fetch(`http://api.weatherstack.com/current?access_key=cc3f94caaf8feef30483bb3e706b17e8&query=${value}`);
-      const {
-        location: { name, country },
-        current: { temperature },
-      } = await res.json();
+  const addTask = useCallback((value) => {
+    setTodoList([...todoList, value]);
+  }, [todoList]);
 
-      const weather = { city: name, country, temperature };
-
-      setData((prev) => [...prev, weather]);
-    } catch (e) {
-      setErrorMessage(e.message);
-    } finally {
-      setLoading(false);
+  const changeTask = useCallback(({ target, text }) => {
+    if (target === 'Mark done') {
+      const task = todoList.filter((item) => item === text);
+      setDoneList([...doneList, ...task]);
+      const newList = todoList.filter((item) => item !== text);
+      setTodoList(newList);
+    } else if (target === 'Undo') {
+      const task = doneList.filter((item) => item === text);
+      setTodoList([...todoList, ...task]);
+      const newList = doneList.filter((item) => item !== text);
+      setDoneList(newList);
+    } else if (target === 'Delete') {
+      if (todoList.find((item) => item === text)) {
+        const newList = todoList.filter((item) => item !== text);
+        setTodoList(newList);
+      } else {
+        const newList = doneList.filter((item) => item !== text);
+        setDoneList(newList);
+      }
     }
-  }, [value]);
+  }, [doneList, todoList]);
+
+  const showAnotherList = useCallback((target) => {
+    if (target === 'All') {
+      setActivePage('All');
+    } else if (target === 'Active') {
+      setActivePage('Active');
+    } else if (target === 'Done') {
+      setActivePage('Done');
+    }
+  }, []);
+
+  function showList() {
+    if (activePage === 'Active') {
+      if (todoList.length > 0) {
+        return todoList.map((i) => <Task text={i} key={i} onClick={changeTask} status="todo" />);
+      }
+      return <p style={{ color: 'green' }}>There are no tasks for today.</p>;
+    }
+    if (activePage === 'Done') {
+      if (doneList.length > 0) {
+        return doneList.map((i) => <Task text={i} key={i} onClick={changeTask} status="done" />);
+      }
+      return <p style={{ color: 'red' }}>You haven`t done anything yet.</p>;
+    }
+    if (doneList.length === 0 && todoList.length === 0) {
+      return <p style={{ color: 'green' }}>There are no tasks for today.</p>;
+    }
+    return (
+      <>
+        {
+      todoList.map((i) => <Task text={i} key={i} onClick={changeTask} status="todo" />)
+      }
+        {
+      doneList.map((i) => <Task text={i} key={i} onClick={changeTask} status="done" />)
+      }
+      </>
+    );
+  }
 
   return (
-    <>
-      <Form onSubmit={onSubmit}>
-        <Input value={value} onChangeText={setValue} />
-
-        <Button>{loading ? 'Loading...' : 'Find'}</Button>
-      </Form>
-      {errorMessage ? <span style={{ color: 'red' }}>{errorMessage}</span> : null}
-      <Table>
-        {
-          data.map((weather) => <TableRow data={weather} />)
-        }
-      </Table>
-    </>
+    <StyledDiv>
+      <Header onClick={showAnotherList} />
+      <Form onSubmit={addTask} />
+      <StyledTaskContainer>
+        {showList()}
+      </StyledTaskContainer>
+    </StyledDiv>
   );
 }
 
-export default App;
+const StyledDiv = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 50vw;
+`;
+
+const StyledTaskContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+`;
