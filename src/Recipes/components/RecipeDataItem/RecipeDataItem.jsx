@@ -1,35 +1,35 @@
 import React from 'react';
 import styled from 'styled-components';
 
-export function RecipeDataItem({ title, image, ingredients }) {
+export function RecipeDataItem({ recipe }) {
+  const {
+    label: title, image, ingredients, totalWeight, calories, totalTime,
+  } = recipe;
   return (
-    <StyledContainer>
+    <Container>
       <h2>{title}</h2>
       <RecipeImage src={image} alt="" />
-      <div style={{
-        width: '100%', paddingTop: '20px', display: 'flex', flexWrap: 'wrap',
-      }}
-      >
-        {ingredients.map((item) => (
+      <IngredientsContainer>
+        {ingredients ? ingredients.map(({ image: src, text, weight }) => (
           <StyledContent>
-            <IngredientImage src={item.image} />
+            <IngredientImage src={src} />
             <TextContainer>
-              <p>{item.text}</p>
-              <p>{`Weight, g: ${item.weight}`}</p>
+              <p>{text}</p>
+              <p>{`Weight, g: ${Math.floor(weight)}`}</p>
             </TextContainer>
           </StyledContent>
-        ))}
-      </div>
+        )) : null}
+      </IngredientsContainer>
       <div>
-        <p>Calories: </p>
-        <p>Total weight: </p>
-        <p>Totaltime: </p>
+        <p>{`Calories: ${Math.floor(calories)}`}</p>
+        <p>{`Total weight, g: ${Math.floor(totalWeight)}`}</p>
+        <p>{`Totaltime, min: ${totalTime}`}</p>
       </div>
-    </StyledContainer>
+    </Container>
   );
 }
 
-const StyledContainer = styled.div`
+const Container = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -51,12 +51,21 @@ const IngredientImage = styled.img`
   object-fit: cover;
 `;
 
+const IngredientsContainer = styled.div`
+  display: flex; 
+  justify-content: space-around;
+  flex-wrap: wrap;
+  width: 100%;
+  padding-top: 20px;
+`;
+
 const StyledContent = styled.div`
   display: flex;
   justify-content: flex-start;
   align-items: center;
   width: 250px;
-  padding: 15px 0;
+  margin-bottom: 15px;
+  padding: 15px 10px;
   font-size: 12px;
   border: 1px solid gray;
 `;

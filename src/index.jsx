@@ -2,14 +2,14 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import './index.css';
-// import { Recipe } from './Recipes';
-import { App } from './App';
+import { Recipe } from './Recipes';
+// import { App } from './App';
 import { store } from './store';
 // import reportWebVitals from './reportWebVitals';
 
 ReactDOM.render(
   <Provider store={store}>
-    <App />
+    <Recipe />
   </Provider>,
   document.getElementById('root'),
 );

@@ -2,15 +2,14 @@ import React, { useCallback } from 'react';
 import styled from 'styled-components';
 
 export function RecipeItem({
-  title, image, healthLabels, onClick, id, getId,
+  title, image, healthLabels, onClick, id,
 }) {
   const onClickHandler = useCallback(() => {
-    getId(id);
-    onClick();
-  }, [onClick, getId, id]);
+    onClick(id);
+  }, [onClick, id]);
 
   return (
-    <StyledContainer id={id} getId={getId}>
+    <StyledContainer id={id}>
       <StyledImage src={`${image}`} onClick={onClickHandler} />
       <StyledContentContainer>
         <StyledTitle>{title}</StyledTitle>

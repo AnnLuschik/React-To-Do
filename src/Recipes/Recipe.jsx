@@ -1,9 +1,12 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
+import ClipLoader from 'react-spinners/ClipLoader';
 import { Input, Button } from '../components';
-import { getRecipeRequest, getMoreRecipeRequest, showRecipeData } from './actions';
-import { RecipeDataItem, RecipeItem } from './components';
+import {
+  getRecipeRequest, getMoreRecipeRequest, getRecipeData, deleteRecipeData,
+} from './actions';
+import { RecipeItem, RecipeDataItem } from './components';
 
 export function Recipe() {
   const [value, setValue] = useState('');
@@ -17,57 +20,70 @@ export function Recipe() {
     dispatch(getMoreRecipeRequest());
   }, [dispatch]);
 
-  const [key, setKey] = useState('');
-  const showRecipeItem = useCallback(() => {
-    dispatch(showRecipeData(key));
-  }, [dispatch, key]);
+  const showRecipeItem = useCallback((id) => {
+    dispatch(getRecipeData(id));
+  }, [dispatch]);
+
+  const showAllRecipes = useCallback(() => {
+    dispatch(deleteRecipeData());
+  }, [dispatch]);
 
   const {
-    loading, loadingMore, errorMessage, data,
+    loading, loadingMore, errorMessage, data, selectedRecipeData,
   } = useSelector((state) => state.recipe);
 
-  // const displayedData = recipeData || data || null;
-
-  const ingredient = [{
-    text: '640 grams chicken - drumsticks and thighs ( 3 whole chicken legs cut apart)',
-    weight: 640.0,
-    image: 'https://www.edamam.com/food-img/491/4916353c22bd1ac381ac81d55597ddbe.jpg',
-  }, {
-    text: '640 grams chicken - drumsticks and thighs ( 3 whole chicken legs cut apart)',
-    weight: 640.0,
-    image: 'https://www.edamam.com/food-img/491/4916353c22bd1ac381ac81d55597ddbe.jpg',
-  }, {
-    text: '640 grams chicken - drumsticks and thighs ( 3 whole chicken legs cut apart)',
-    weight: 640.0,
-    image: 'https://www.edamam.com/food-img/491/4916353c22bd1ac381ac81d55597ddbe.jpg',
-  }, {
-    text: '640 grams chicken - drumsticks and thighs ( 3 whole chicken legs cut apart)',
-    weight: 640.0,
-    image: 'https://www.edamam.com/food-img/491/4916353c22bd1ac381ac81d55597ddbe.jpg',
-  }];
+  const dispayedData = selectedRecipeData || data || 'none';
+  const showData = useMemo(() => {
+    switch (dispayedData) {
+      case selectedRecipeData: {
+        return (
+          <>
+            <RecipeDataItem
+              recipe={selectedRecipeData.recipe}
+            />
+            <BackButton type="solid" color="black" onClick={showAllRecipes}>Back</BackButton>
+          </>
+        );
+      }
+      case data: {
+        return (
+          <>
+            { data.hits.map(({ recipe }) => (
+              <RecipeItem
+                key={recipe.uri}
+                id={recipe.uri}
+                title={recipe.label}
+                image={recipe.image}
+                healthLabels={recipe.healthLabels}
+                onClick={showRecipeItem}
+              />
+            ))}
+            {data.hits.length !== 0
+              ? <ShowMoreButton color="black" type="solid" onClick={getMoreRecipe}>{loadingMore ? 'Loading...' : 'Show more'}</ShowMoreButton>
+              : null}
+          </>
+        ); }
+      default: return null;
+    }
+  }, [
+    data,
+    dispayedData,
+    selectedRecipeData,
+    showAllRecipes,
+    showRecipeItem,
+    getMoreRecipe,
+    loadingMore,
+  ]);
 
   return (
     <Container>
       <form style={{ marginBottom: '25px' }} onSubmit={(e) => e.preventDefault()}>
         <Input value={value} onChange={setValue} />
-        <Button color="black" customType="solid" onClick={getRecipe}>{loading ? 'Loading...' : 'Search'}</Button>
+        <Button color="black" type="solid" onClick={getRecipe}>Search</Button>
       </form>
       { errorMessage ? <h2 style={{ color: 'red' }}>{errorMessage}</h2> : null }
-      {true ? <RecipeDataItem title="Chicken" image="https://www.edamam.com/web-img/e42/e42f9119813e890af34c259785ae1cfb.jpg" ingredients={ingredient} /> : null}
-      {
-        data ? data.hits.map(({ recipe }) => (
-          <RecipeItem
-            key={recipe.uri}
-            id={recipe.uri}
-            title={recipe.label}
-            image={recipe.image}
-            healthLabels={recipe.healthLabels}
-            onClick={showRecipeItem}
-            getId={setKey}
-          />
-        )) : null
-      }
-      {data ? <Button color="black" customType="solid" onClick={getMoreRecipe}>{loadingMore ? 'Loading...' : 'Show more'}</Button> : null}
+      {loading ? <ClipLoader /> : null}
+      {showData}
     </Container>
   );
 }
@@ -78,4 +94,12 @@ const Container = styled.div`
   justify-content: center;
   align-items: center;
   padding-top: 50px;
+`;
+
+const ShowMoreButton = styled(Button)`
+  margin: 10px 0;
+`;
+
+const BackButton = styled(Button)`
+  margin: 10px 0;
 `;

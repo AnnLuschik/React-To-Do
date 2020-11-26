@@ -5,7 +5,8 @@ import {
   GET_MORE_RECIPE_SUCCESS,
   GET_MORE_RECIPE_FAILURE,
   GET_MORE_RECIPE_REQUEST,
-  SHOW_RECIPE_DATA,
+  GET_RECIPE_DATA,
+  DELETE_RECIPE_DATA,
 } from './actions';
 
 const initialState = {
@@ -13,7 +14,7 @@ const initialState = {
   errorMessage: null,
   loading: false,
   loadingMore: false,
-  recipeData: null,
+  selectedRecipeData: null,
 };
 
 export function recipeReducer(state = initialState, action) {
@@ -65,10 +66,18 @@ export function recipeReducer(state = initialState, action) {
       };
     }
 
-    case SHOW_RECIPE_DATA: {
+    case GET_RECIPE_DATA: {
       return {
         ...state,
-        recipeData: action.payload,
+        selectedRecipeData: {
+          ...state.data.hits.find((item) => item.recipe.uri === action.payload),
+        },
+      };
+    }
+    case DELETE_RECIPE_DATA: {
+      return {
+        ...state,
+        selectedRecipeData: null,
       };
     }
 

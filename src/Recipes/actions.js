@@ -6,7 +6,8 @@ export const GET_MORE_RECIPE_REQUEST = 'GET_MORE_RECIPE_REQUEST';
 export const GET_MORE_RECIPE_SUCCESS = 'GET_MORE_RECIPE_SUCCESS';
 export const GET_MORE_RECIPE_FAILURE = 'GET_MORE_RECIPE_FAILURE';
 
-export const SHOW_RECIPE_DATA = 'SHOW_RECIPE_DATA';
+export const GET_RECIPE_DATA = 'GET_RECIPE_DATA';
+export const DELETE_RECIPE_DATA = 'DELETE_RECIPE_DATA';
 
 export function getRecipeRequest(query) {
   return {
@@ -45,9 +46,14 @@ export function getMoreRecipeFailure(error) {
   };
 }
 
-export function showRecipeData(key) {
+export function getRecipeData(key) {
   return {
-    type: SHOW_RECIPE_DATA,
+    type: GET_RECIPE_DATA,
     payload: key,
+  };
+}
+export function deleteRecipeData() {
+  return {
+    type: DELETE_RECIPE_DATA,
   };
 }
