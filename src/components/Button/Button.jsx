@@ -2,13 +2,13 @@ import React from 'react';
 import styled from 'styled-components';
 
 export function Button({
-  onClick, children, customType, color = 'transparent',
+  onClick, children, type, color, ...restProps
 }) {
   return (
     <StyledBtn
-      customType={customType}
+      {...restProps}
+      customType={type}
       color={color}
-      fontColor={customType === 'solid' ? 'white' : 'blue'}
       onClick={onClick}
     >
       {children}
@@ -20,8 +20,8 @@ const StyledBtn = styled.button`
   padding: 10px 15px;
   font-weight: 600;
   font-size: 16px;
-  color: ${(props) => props.fontColor};
-  background-color: ${(props) => props.color};
+  color: white;
+  background-color: transparent;
   border: none;
   border-radius: 5px;
   outline: none;
@@ -30,4 +30,8 @@ const StyledBtn = styled.button`
   &:hover {
     opacity: 0.6;
   }
+
+  ${(props) => (props.customType === 'solid'
+    ? `background-color: ${props.color}`
+    : `color: ${props.color}`)}
 `;
