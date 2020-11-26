@@ -1,0 +1,77 @@
+import {
+  GET_RECIPE_SUCCESS,
+  GET_RECIPE_FAILURE,
+  GET_RECIPE_REQUEST,
+  GET_MORE_RECIPE_SUCCESS,
+  GET_MORE_RECIPE_FAILURE,
+  GET_MORE_RECIPE_REQUEST,
+  SHOW_RECIPE_DATA,
+} from './actions';
+
+const initialState = {
+  data: null,
+  errorMessage: null,
+  loading: false,
+  loadingMore: false,
+  recipeData: null,
+};
+
+export function recipeReducer(state = initialState, action) {
+  switch (action.type) {
+    case GET_RECIPE_SUCCESS: {
+      return {
+        ...state,
+        data: action.payload,
+        loading: false,
+      };
+    }
+    case GET_RECIPE_FAILURE: {
+      return {
+        ...state,
+        errorMessage: action.payload,
+        loading: false,
+      };
+    }
+    case GET_RECIPE_REQUEST: {
+      return {
+        ...state,
+        loading: true,
+        errorMessage: null,
+      };
+    }
+
+    case GET_MORE_RECIPE_SUCCESS: {
+      return {
+        ...state,
+        loadingMore: false,
+        data: {
+          ...action.payload,
+          hits: [...state.data.hits, ...action.payload.hits],
+        },
+      };
+    }
+    case GET_MORE_RECIPE_FAILURE: {
+      return {
+        ...state,
+        errorMessage: action.payload,
+        loadingMore: false,
+      };
+    }
+    case GET_MORE_RECIPE_REQUEST: {
+      return {
+        ...state,
+        loadingMore: true,
+        errorMessage: null,
+      };
+    }
+
+    case SHOW_RECIPE_DATA: {
+      return {
+        ...state,
+        recipeData: action.payload,
+      };
+    }
+
+    default: return state;
+  }
+}
