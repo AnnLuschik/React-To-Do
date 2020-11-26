@@ -2,18 +2,22 @@ import React, { useCallback } from 'react';
 import styled from 'styled-components';
 import { Button } from '../Button';
 
-export function Header({ onClick }) {
-  const onClickHandler = useCallback((event) => {
-    event.preventDefault();
-    const target = event.target.textContent;
-    onClick(target);
-  }, [onClick]);
+function HeaderButton({
+  type, onClick, page, children,
+}) {
+  const onClickHandler = useCallback(() => {
+    onClick(type);
+  }, [onClick, type]);
 
+  return <Button onClick={onClickHandler} color={page === type ? 'green' : 'blue'}>{children}</Button>;
+}
+
+export function Header({ page, onClick }) {
   return (
-    <StyledDiv onClick={onClickHandler}>
-      <Button customType="clear">All</Button>
-      <Button customType="clear">Active</Button>
-      <Button customType="clear">Done</Button>
+    <StyledDiv>
+      <HeaderButton page={page} onClick={onClick} type="all">All</HeaderButton>
+      <HeaderButton page={page} onClick={onClick} type="active">Active</HeaderButton>
+      <HeaderButton page={page} onClick={onClick} type="done">Done</HeaderButton>
     </StyledDiv>
   );
 }
@@ -22,5 +26,5 @@ const StyledDiv = styled.div`
   display: flex;
   justify-content: space-around;
   width: 100%;
-  padding: 50px 0 50px;
+  padding: 20px 0 50px;
 `;
