@@ -22,16 +22,16 @@ export function Form({ onSubmit }) {
         Add a todo for today
         <StyledInput type="text" id="input" value={value} onChange={onChange} />
       </label>
-      <Button customType="solid" color="black">Add</Button>
+      <Button type="solid" color="black">Add</Button>
     </StyledForm>
   );
 }
 
 const StyledForm = styled.form`
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
-  width: 75%;
+  width: 85%;
   margin: 0 50px 25px;
 `;
 
