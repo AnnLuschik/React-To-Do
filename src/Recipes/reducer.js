@@ -7,6 +7,8 @@ import {
   GET_MORE_RECIPE_REQUEST,
   GET_RECIPE_DATA,
   DELETE_RECIPE_DATA,
+  LOGIN_SUCCESS,
+  LOGIN_FAILURE,
 } from './actions';
 
 const initialState = {
@@ -15,6 +17,7 @@ const initialState = {
   loading: false,
   loadingMore: false,
   selectedRecipeData: null,
+  isAuthorized: false,
 };
 
 export function recipeReducer(state = initialState, action) {
@@ -78,6 +81,20 @@ export function recipeReducer(state = initialState, action) {
       return {
         ...state,
         selectedRecipeData: null,
+      };
+    }
+
+    case LOGIN_SUCCESS: {
+      return {
+        ...state,
+        isAuthorized: true,
+      };
+    }
+
+    case LOGIN_FAILURE: {
+      return {
+        ...state,
+        isAuthorized: false,
       };
     }
 

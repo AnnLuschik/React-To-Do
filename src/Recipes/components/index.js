@@ -1,2 +1,4 @@
 export { RecipeItem } from './RecipeItem';
-export { RecipeDataItem } from './RecipeDataItem';
+export { DetailsPage } from './DetailsPage';
+export { AuthorizationForm } from './AuthorizationForm';
+export { RecipeList } from './RecipeList';

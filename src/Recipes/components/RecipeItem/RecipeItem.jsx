@@ -1,4 +1,5 @@
 import React, { useCallback } from 'react';
+import { Link, useRouteMatch } from 'react-router-dom';
 import styled from 'styled-components';
 
 export function RecipeItem({
@@ -8,9 +9,13 @@ export function RecipeItem({
     onClick(id);
   }, [onClick, id]);
 
+  const { url } = useRouteMatch();
+
   return (
     <StyledContainer id={id}>
-      <StyledImage src={`${image}`} onClick={onClickHandler} />
+      <Link to={`${url}/${id.split('_')[1]}`}>
+        <StyledImage src={`${image}`} onClick={onClickHandler} />
+      </Link>
       <StyledContentContainer>
         <StyledTitle>{title}</StyledTitle>
         <ol>

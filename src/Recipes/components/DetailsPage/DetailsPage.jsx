@@ -1,9 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
 
-export function RecipeDataItem({ recipe }) {
+export function DetailsPage({ recipe }) {
   const {
-    label: title, image, ingredients, totalWeight, calories, totalTime,
+    recipe: {
+      label: title, image, ingredients, totalWeight, calories, totalTime,
+    },
   } = recipe;
   return (
     <Container>
